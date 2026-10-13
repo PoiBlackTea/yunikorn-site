@@ -37,6 +37,20 @@ Below is the structure of e2e tests, all contained within the [yunikorn-k8shim](
 This project requires Go to be installed. On OS X with Homebrew you can just run `brew install go`.
 OR follow this doc for deploying go https://golang.org/doc/install
 
+The `run-e2e-tests.sh` script also requires a container engine, either Docker
+or Podman. The script uses `docker` when installed and falls back to `podman`
+otherwise. To use Podman even when Docker is installed, set the `DOCKER`
+variable:
+```shell
+DOCKER=podman ./scripts/run-e2e-tests.sh -a install -n yktest -v kindest/node:v1.28.0
+```
+
+When Podman is used, the script sets `KIND_EXPERIMENTAL_PROVIDER=podman` for
+Kind automatically. If both Docker and Podman are installed, use the same
+`DOCKER` value for the `install`, `test` and `cleanup` actions, otherwise Kind
+will not find the cluster and `cleanup` silently leaves it running. See [Using Kind with Podman](developer_guide/env_setup.md#using-kind-with-podman)
+for the host requirements.
+
 ## Understanding the Command Line Arguments
 * `yk-namespace` - namespace under which YuniKorn is deployed. [Required]
 * `kube-config` - path to kube config file, needed for k8s client [Required]
